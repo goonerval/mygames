@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MyGames Launcher — Star Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* =======================
+   STARFIELD BACKGROUND
+   ======================= */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #05010a;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Star layers for parallax */
+.stars, .stars2, .stars3 {
+    position: fixed;
+    top: 0; left: 0;
+    width: 200%;
+    height: 200%;
+    background-repeat: repeat;
+    background-size: contain;
+    z-index: -1;
+    animation: drift 200s linear infinite;
+}
+
+.stars   { background-image: url('https://rawcdn.githack.com/ChatGPTAssets/stars/refs/heads/main/stars1.png'); opacity: 0.6; }
+.stars2  { background-image: url('https://rawcdn.githack.com/ChatGPTAssets/stars/refs/heads/main/stars2.png'); opacity: 0.4; animation-duration: 350s; }
+.stars3  { background-image: url('https://rawcdn.githack.com/ChatGPTAssets/stars/refs/heads/main/stars3.png'); opacity: 0.2; animation-duration: 500s; }
+
+@keyframes drift {
+    from { transform: translate(0,0); }
+    to   { transform: translate(-50%, -50%); }
+}
+
+/* =======================
+   HEADER + SEARCH
+   ======================= */
+header {
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 1.2s ease-out;
+}
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 14px #6dd1ff;
+}
+
+#search {
+    width: 80%;
+    max-width: 420px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    backdrop-filter: blur(5px);
+}
+
+#toggleTheme {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #00aaff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #00aaff;
+}
+#toggleTheme:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 18px #33ccff;
+}
+
+/* =======================
+   GRID + GAME CARDS
+   ======================= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+    padding: 20px;
+    padding-bottom: 60px;
+}
+
+.card {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(6px);
+    border-radius: 14px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.35s;
+    animation: floatIn 0.8s ease-out forwards;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.card:hover {
+    transform: scale(1.08) translateY(-6px);
+    box-shadow: 0 0 25px rgba(0,180,255,0.6);
+    border-color: rgba(0,180,255,0.8);
+}
+
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.6);
+}
+
+a {
+    text-decoration: none;
+    color: #8bdcff;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 0 8px #0099ff;
+}
+
+/* =======================
+   ANIMATIONS
+   ======================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatIn {
+    from { opacity: 0; transform: translateY(25px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* =======================
+   LIGHT MODE
+   ======================= */
+.light {
+    background: #dff4ff;
+    color: #000;
+}
+
+.light #toggleTheme {
+    background: #0066cc;
+    box-shadow: 0 0 10px #0066cc;
+}
+
+.light .card {
+    background: rgba(0,0,0,0.07);
+    border-color: rgba(0,0,0,0.1);
+}
+
+.light a {
+    color: #0066cc;
+    text-shadow: none;
+}
+</style>
+</head>
+<body>
+
+<!-- ⭐ The animated sky/star field -->
+<div class="stars"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<header>
+    <h1>MyGames Launcher ⭐</h1>
+    <input type="text" id="search" placeholder="Search games...">
+    <br>
+    <button id="toggleTheme">Toggle Dark/Light Mode</button>
+</header>
+
+<div class="grid" id="gameGrid">
+
+    <div class="card" data-name="DragonX">
+        <img src="https://via.placeholder.com/600x300?text=DragonX" alt="">
+        <a href="https://rawcdn.githack.com/goonerval/mygames/main/DragonX-V3_Offline_International.html" target="_blank">
+            DragonX V3 Offline
+        </a>
+    </div>
+
+    <div class="card" data-name="Eaglercraft">
+        <img src="https://via.placeholder.com/600x300?text=EaglercraftX" alt="">
+        <a href="https://rawcdn.githack.com/goonerval/mygames/main/EaglercraftX_1.8_u53_Offline_Signed.html" target="_blank">
+            EaglercraftX 1.8 Offline
+        </a>
+    </div>
+
+    <div class="card" data-name="UwU">
+        <img src="https://via.placeholder.com/600x300?text=UwU+Client" alt="">
+        <a href="https://rawcdn.githack.com/goonerval/mygames/main/UwU-client-b2-offline.html" target="_blank">
+            UwU Client B2 Offline
+        </a>
+    </div>
+
+    <div class="card" data-name="Astra">
+        <img src="https://via.placeholder.com/600x300?text=Astra" alt="">
+        <a href="https://rawcdn.githack.com/goonerval/mygames/main/astra.html" target="_blank">
+            Astra Client
+        </a>
+    </div>
+
+    <div class="card" data-name="clsinglefile">
+        <img src="https://via.placeholder.com/600x300?text=clSINGLEFILE" alt="">
+        <a href="https://rawcdn.githack.com/goonerval/mygames/main/clSINGLEFILE.html" target="_blank">
+            clSINGLEFILE
+        </a>
+    </div>
+
+</div>
+
+<script>
+const search = document.getElementById("search");
+const cards = document.querySelectorAll(".card");
+const toggleTheme = document.getElementById("toggleTheme");
+
+// Search filter
+search.addEventListener("keyup", () => {
+    let value = search.value.toLowerCase();
+    cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        card.style.display = name.includes(value) ? "block" : "none";
+    });
+});
+
+// Toggle theme
+toggleTheme.addEventListener("click", () => {
+    document.body.classList.toggle("light");
+});
+</script>
+
+</body>
+</html>
