@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MyGames Launcher — Star Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* GLOBAL */
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #030014;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* STARFIELD LAYERS */
+.stars, .stars2, .stars3 {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: -2;
+    animation: starDrift linear infinite;
+}
+
+.stars  { background-image: radial-gradient(2px 2px at 20px 20px, white, transparent); opacity: .5; animation-duration: 120s; }
+.stars2 { background-image: radial-gradient(2px 2px at 40px 40px, white, transparent); opacity: .3; animation-duration: 200s; }
+.stars3 { background-image: radial-gradient(2px 2px at 60px 60px, white, transparent); opacity: .2; animation-duration: 300s; }
+
+@keyframes starDrift {
+    from { transform: translate(0,0); }
+    to   { transform: translate(-50%, -50%); }
+}
+
+/* SHOOTING STARS */
+.shoot {
+    position: fixed;
+    top: -10px;
+    width: 3px;
+    height: 80px;
+    background: linear-gradient(180deg, white, transparent);
+    opacity: 0.8;
+    border-radius: 2px;
+    filter: blur(1px);
+    animation: shoot 1.6s linear infinite;
+}
+
+@keyframes shoot {
+    0%   { transform: translate(0,0) rotate(45deg); opacity: 1; }
+    100% { transform: translate(600px,600px) rotate(45deg); opacity: 0; }
+}
+
+/* RANDOM SHOOTER POSITIONS */
+.shoot:nth-child(1) { left: 10vw; animation-delay: 0s; }
+.shoot:nth-child(2) { left: 40vw; animation-delay: 2s; }
+.shoot:nth-child(3) { left: 70vw; animation-delay: 4s; }
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 1.3s ease-out;
+}
+
+h1 {
+    font-size: 42px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px #7cd4ff;
+}
+
+#search {
+    width: 80%;
+    max-width: 420px;
+    padding: 12px;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border-radius: 10px;
+    backdrop-filter: blur(6px);
+}
+
+/* THEME BUTTON */
+#toggleTheme {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #00aaff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #00aaff;
+}
+#toggleTheme:hover { transform: scale(1.07); }
+
+/* GRID + CARDS */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px,1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.35s;
+    animation: cardFloat 1s ease-out forwards;
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 0 25px rgba(0,190,255,0.7);
+}
+
+/* CARD TITLE */
+.card a {
+    text-decoration: none;
+    color: #9fe4ff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-15px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardFloat {
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* LIGHT MODE */
+.light {
+    background: #e7f6ff;
+    color: black;
+}
+
+.light .card { background: rgba(0,0,0,0.06); }
+.light a { color: #005fa3; }
+</style>
+</head>
+<body>
+
+<!-- STAR LAYERS -->
+<div class="stars"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<!-- SHOOTING STARS -->
+<div class="shoot"></div>
+<div class="shoot"></div>
+<div class="shoot"></div>
+
+<header>
+    <h1>MyGames Launcher ✨</h1>
+    <input type="text" id="search" placeholder="Search games..."><br>
+    <button id="toggleTheme">Toggle Light/Dark</button>
+</header>
+
+<!-- GAME GRID -->
+<div class="grid">
+
+    <div class="card" data-name="dragonx" onclick="openGame('https://rawcdn.githack.com/goonerval/mygames/main/DragonX-V3_Offline_International.html')">
+        <a>DragonX V3 Offline</a>
+    </div>
+
+    <div class="card" data-name="eaglercraft" onclick="openGame('https://rawcdn.githack.com/goonerval/mygames/main/EaglercraftX_1.8_u53_Offline_Signed.html')">
+        <a>EaglercraftX 1.8 Offline</a>
+    </div>
+
+    <div class="card" data-name="uwu" onclick="openGame('https://rawcdn.githack.com/goonerval/mygames/main/UwU-client-b2-offline.html')">
+        <a>UwU Client B2 Offline</a>
+    </div>
+
+    <div class="card" data-name="astra" onclick="openGame('https://rawcdn.githack.com/goonerval/mygames/main/astra.html')">
+        <a>Astra Client</a>
+    </div>
+
+    <div class="card" data-name="clsinglefile" onclick="openGame('https://rawcdn.githack.com/goonerval/mygames/main/clSINGLEFILE.html')">
+        <a>clSINGLEFILE</a>
+    </div>
+
+</div>
+
+<script>
+// SEARCH FUNCTION
+document.getElementById("search").addEventListener("keyup", function () {
+    let value = this.value.toLowerCase();
+    document.querySelectorAll(".card").forEach(card => {
+        card.style.display = card.dataset.name.includes(value) ? "block" : "none";
+    });
+});
+
+// THEME SWITCH
+document.getElementById("toggleTheme").addEventListener("click", () => {
+    document.body.classList.toggle("light");
+});
+
+// OPEN IN about:blank (sandbox window)
+function openGame(url) {
+    let w = window.open("about:blank", "_blank");
+    w.location.href = url;
+}
+</script>
+
+</body>
+</html>
+
