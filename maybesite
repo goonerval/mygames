@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Playground — Unblocked Games</title>
+  <meta name="description" content="A lightweight gallery of web games. Click a tile to play (or open in a new tab)." />
+
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --accent:#7c3aed;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      --gap:16px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                   Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 400px at 10% 10%, rgba(124,58,237,0.08), transparent 8%),
+        radial-gradient(1000px 300px at 90% 90%, rgba(14,165,233,0.03), transparent 6%),
+        var(--bg);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+      line-height:1.35;
+    }
+
+    header{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:56px;height:56px;
+      background:linear-gradient(135deg,var(--accent),#06b6d4);
+      border-radius:12px;
+      display:grid;place-items:center;
+      font-weight:700;font-size:20px;color:white;
+      box-shadow: 0 6px 20px rgba(12,18,30,0.6);
+    }
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{
+      display:flex;
+      gap:10px;
+      margin:16px 0 22px 0;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .search{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:var(--glass);
+      padding:8px 12px;border-radius:10px;
+      min-width:240px;
+    }
+    .search input{
+      background:transparent;border:0;color:inherit;outline:none;
+      font-size:14px;
+    }
+    select,button,input[type="url"],input[type="text"]{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.04);
+      color:inherit;padding:8px 10px;border-radius:10px;font-size:13px;
+    }
+    button.primary{
+      background:linear-gradient(90deg,var(--accent),#06b6d4);
+      border:none;padding:10px 14px;border-radius:10px;
+      color:white;font-weight:600;cursor:pointer;
+      box-shadow:0 8px 30px rgba(124,58,237,0.12);
+    }
+    .grid{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      border-radius:var(--radius);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.03);
+      display:flex;flex-direction:column;
+      transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(2,6,23,0.6); }
+    .thumb{
+      aspect-ratio: 16/9; background-size:cover;background-position:center;
+      display:block;
+    }
+    .meta{padding:12px;display:flex;gap:12px;align-items:center;}
+    .meta h3{margin:0;font-size:15px}
+    .meta p{margin:0;color:var(--muted);font-size:12px}
+    .meta .play{
+      margin-left:auto;
+    }
+    .tag{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:12px;color:var(--muted)}
+
+    footer{margin-top:26px;color:var(--muted);font-size:13px}
+
+    /* modal */
+    .modal-backdrop{
+      position:fixed;inset:0;display:none;place-items:center;padding:26px;
+      background: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.85));
+      z-index:60;
+    }
+    .modal{
+      width:100%;max-width:1100px;height:80vh;background:var(--card);
+      border-radius:12px;overflow:hidden;display:flex;flex-direction:column;
+      box-shadow:0 30px 80px rgba(2,6,23,0.8);position:relative;
+    }
+    .modal .toolbar{
+      padding:10px 12px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.02);
+    }
+    .modal .toolbar .title{font-weight:600}
+    .modal iframe{
+      border:0;flex:1;width:100%;
+      background:black;
+    }
+    .close-btn{margin-left:auto;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;cursor:pointer}
+
+    /* add form */
+    .add-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .small{font-size:12px;padding:8px;border-radius:8px;background:transparent;border:1px dashed rgba(255,255,255,0.03);color:var(--muted)}
+
+    @media (max-width:560px){
+      header{gap:10px}
+      .logo{width:48px;height:48px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">PG</div>
+    <div>
+      <h1>Playground — Web Games</h1>
+      <p class="lead">Click a tile to play. If embedding is blocked, open the game in a new tab.</p>
+    </div>
+  </header>
+
+  <div class="controls" role="region" aria-label="controls">
+    <div class="search" title="Search games">
+      🔎 <input id="search" placeholder="Search games or tags (e.g., puzzle, arcade)..." aria-label="Search games">
+    </div>
+
+    <select id="categoryFilter" aria-label="Filter by category">
+      <option value="all">All categories</option>
+      <option value="arcade">Arcade</option>
+      <option value="puzzle">Puzzle</option>
+      <option value="racing">Racing</option>
+      <option value="multiplayer">Multiplayer</option>
+    </select>
+
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <button class="primary" id="randomBtn" title="Open a random game">Surprise me</button>
+    </div>
+  </div>
+
+  <!-- Add game quick form -->
+  <details style="margin-bottom:14px;border-radius:10px;overflow:hidden" open>
+    <summary style="padding:8px 12px;background:rgba(255,255,255,0.02);cursor:pointer">Add a game</summary>
+    <div style="padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <input id="gameTitle" class="small" placeholder="Title (e.g., Geometry Dash)" aria-label="Game title">
+      <input id="gameUrl" class="small" placeholder="Game URL (https://...)" aria-label="Game url">
+      <input id="gameThumb" class="small" placeholder="Thumbnail URL (optional)" aria-label="Thumbnail url">
+      <input id="gameTag" class="small" placeholder="Category (e.g., arcade)" aria-label="Category">
+      <button id="addGameBtn" class="small" style="background:linear-gradient(90deg,var(--accent),#06b6d4);color:white;border:none">Add</button>
+      <div style="width:100%;color:var(--muted);font-size:12px">Games you add are stored in your browser (localStorage). You can edit the array in the script for permanent changes.</div>
+    </div>
+  </details>
+
+  <main>
+    <section class="grid" id="gameGrid" aria-live="polite"></section>
+  </main>
+
+  <footer>
+    Tip: if a game doesn’t load in the modal, click Open in new tab. Do not attempt to bypass network filters.
+  </footer>
+
+  <!-- Modal -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <div class="toolbar">
+        <div class="title" id="modalTitle">Playing</div>
+        <div class="tag" id="modalTag">tag</div>
+        <button class="close-btn" id="openNewTab">Open in new tab</button>
+        <button class="close-btn" id="closeModal">Close</button>
+      </div>
+      <iframe id="gameFrame" srcdoc="<p style='color:#fff;padding:18px'>Loading…</p>"></iframe>
+      <div id="iframeMessage" style="display:none;padding:12px;color:var(--muted);background:rgba(255,255,255,0.01)">
+        This site blocks embedding — click Open in new tab to play.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*************************************************
+     * Sample games list
+     * Replace or extend these objects with your own
+     * { title, url, thumb (optional), tag }
+     *************************************************/
+    const defaultGames = [
+      {
+        title: "Geometry Dash (HTML5 fan)",
+        url: "https://example.com/geometry-dash", // replace with a playable URL
+        thumb: "https://i.imgur.com/1YcV9eK.png",
+        tag: "arcade"
+      },
+      {
+        title: "2048",
+        url: "https://play2048.co/",
+        thumb: "https://play2048.co/favicon.png",
+        tag: "puzzle"
+      },
+      {
+        title: "Agar.io (browser)",
+        url: "https://agar.io/",
+        thumb: "https://i.imgur.com/C3Gq9Z8.png",
+        tag: "multiplayer"
+      },
+      {
+        title: "Slope (demo)",
+        url: "https://example.com/slope",
+        thumb: "https://i.imgur.com/7kR0b1J.png",
+        tag: "racing"
+      }
+    ];
+
+    // LocalStorage key
+    const STORAGE_KEY = "playground_games_v1";
+
+    // Load games from storage or use defaults
+    function loadGames(){
+      try{
+        const stored = localStorage.getItem(STORAGE_KEY);
+        return stored ? JSON.parse(stored) : defaultGames.slice();
+      }catch(e){
+        console.error("Failed to parse stored games:", e);
+        return defaultGames.slice();
+      }
+    }
+    function saveGames(list){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    let games = loadGames();
+
+    // DOM refs
+    const grid = document.getElementById("gameGrid");
+    const searchInput = document.getElementById("search");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalTag = document.getElementById("modalTag");
+    const gameFrame = document.getElementById("gameFrame");
+    const iframeMessage = document.getElementById("iframeMessage");
+    const openNewTabBtn = document.getElementById("openNewTab");
+    const closeModalBtn = document.getElementById("closeModal");
+    const randomBtn = document.getElementById("randomBtn");
+
+    // add game form
+    document.getElementById("addGameBtn").addEventListener("click", ()=>{
+      const title = document.getElementById("gameTitle").value.trim();
+      const url = document.getElementById("gameUrl").value.trim();
+      const thumb = document.getElementById("gameThumb").value.trim();
+      const tag = document.getElementById("gameTag").value.trim() || "arcade";
+      if(!title || !url){
+        alert("Please enter a title and a URL.");
+        return;
+      }
+      const newGame = { title, url, thumb: thumb || defaultThumb(title), tag };
+      games.unshift(newGame);
+      saveGames(games);
+      render();
+      // clear
+      document.getElementById("gameTitle").value = "";
+      document.getElementById("gameUrl").value = "";
+      document.getElementById("gameThumb").value = "";
+      document.getElementById("gameTag").value = "";
+    });
+
+    // default generated thumbnail when none provided
+    function defaultThumb(title){
+      const color = Math.floor(Math.random()*16777215).toString(16);
+      return `https://via.placeholder.com/600x338/${color}/ffffff?text=${encodeURIComponent(title)}`;
+    }
+
+    // render grid
+    function render(){
+      const q = searchInput.value.trim().toLowerCase();
+      const cat = categoryFilter.value;
+      grid.innerHTML = "";
+      const filtered = games.filter(g=>{
+        if(cat !== "all" && g.tag && g.tag.toLowerCase() !== cat) return false;
+        if(!q) return true;
+        return (g.title && g.title.toLowerCase().includes(q)) ||
+               (g.tag && g.tag.toLowerCase().includes(q));
+      });
+      if(filtered.length === 0){
+        grid.innerHTML = `<div style="color:var(--muted);padding:24px;border-radius:12px;background:rgba(255,255,255,0.01)">No games found. Try a different search or add a new game.</div>`;
+        return;
+      }
+      filtered.forEach((g, idx)=>{
+        const el = document.createElement("article");
+        el.className = "card";
+        const thumbUrl = g.thumb || defaultThumb(g.title || "Game");
+        el.innerHTML = `
+          <div class="thumb" style="background-image:url('${escapeHtml(thumbUrl)}')" role="img" aria-label="${escapeHtml(g.title || 'game thumbnail')}"></div>
+          <div class="meta">
+            <div>
+              <h3>${escapeHtml(g.title || 'Untitled')}</h3>
+              <p>${escapeHtml(g.tag || '')}</p>
+            </div>
+            <div class="play">
+              <button class="small" data-idx="${idx}" title="Play in modal">Play</button>
+              <a class="small" href="${escapeAttr(g.url)}" target="_blank" rel="noopener noreferrer" style="margin-left:8px">Open</a>
+            </div>
+          </div>
+        `;
+        grid.appendChild(el);
+      });
+
+      // attach play handlers
+      grid.querySelectorAll('button[data-idx]').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const idx = Number(e.currentTarget.getAttribute('data-idx'));
+          openGameModal(filtered[idx] || games[idx]);
+        });
+      });
+    }
+
+    // escape helpers
+    function escapeHtml(s){ return String(s || "").replace(/[&<>"']/g, function(m){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m];
+    });}
+    function escapeAttr(s){ return (s||"").replace(/"/g,'&quot;'); }
+
+    // modal open
+    function openGameModal(game){
+      if(!game || !game.url) return;
+      modalTitle.textContent = game.title || "Playing";
+      modalTag.textContent = game.tag || "";
+      modalBackdrop.style.display = "grid";
+      modalBackdrop.setAttribute("aria-hidden", "false");
+      // try embedding. We'll attempt to set src and detect load or block.
+      iframeMessage.style.display = "none";
+      gameFrame.style.display = "block";
+      gameFrame.srcdoc = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#fff;background:#000;font-family:Inter,Arial,sans-serif">Loading…</div>`;
+      // small delay before setting src to allow the srcdoc to show instantly
+      setTimeout(()=> {
+        try {
+          gameFrame.src = game.url;
+        } catch(e){
+          console.warn("Error setting iframe src:", e);
+          showIframeBlocked(game.url);
+        }
+      }, 80);
+
+      // When iframe loads, check if it loaded a page we can access (not always possible due to cross-origin)
+      const onLoad = () => {
+        // Some sites simply refuse to render even though load fires; we show a soft message if frame height==0 or contentWindow is null.
+        setTimeout(()=> {
+          const canAccess = (() => {
+            try {
+              // Accessing location.href will throw if cross-origin; we catch.
+              const href = gameFrame.contentWindow && gameFrame.contentWindow.location && gameFrame.contentWindow.location.href;
+              return !!href;
+            } catch(e){ return false; }
+          })();
+          // If it appears blocked/cross-origin, show fallback instruction but leave the iframe; user can still click Open.
+          if(!canAccess){
+            iframeMessage.style.display = "block";
+          } else {
+            iframeMessage.style.display = "none";
+          }
+        }, 250);
+      };
+
+      gameFrame.removeEventListener('load', onLoad);
+      gameFrame.addEventListener('load', onLoad, {once:true});
+
+      openNewTabBtn.onclick = () => window.open(game.url, "_blank", "noopener");
+      closeModalBtn.onclick = closeModal;
+      // pressing Esc closes
+      window.addEventListener('keydown', escClose);
+    }
+
+    function escClose(e){ if(e.key === "Escape") closeModal(); }
+    function closeModal(){
+      gameFrame.src = "about:blank";
+      modalBackdrop.style.display = "none";
+      modalBackdrop.setAttribute("aria-hidden", "true");
+      window.removeEventListener('keydown', escClose);
+    }
+
+    function showIframeBlocked(url){
+      gameFrame.style.display="none";
+      iframeMessage.style.display = "block";
+      openNewTabBtn.onclick = () => window.open(url, "_blank", "noopener");
+    }
+
+    // random button
+    randomBtn.addEventListener('click', ()=>{
+      if(!games.length) return;
+      const i = Math.floor(Math.random()*games.length);
+      openGameModal(games[i]);
+    });
+
+    // filters
+    searchInput.addEventListener('input', render);
+    categoryFilter.addEventListener('change', render);
+
+    // initial render
+    render();
+
+    // expose small API in console for power users
+    window.Playground = {
+      getGames: ()=>games,
+      addGame: (g)=>{ games.unshift(g); saveGames(games); render(); },
+      resetToDefaults: ()=>{ games = defaultGames.slice(); saveGames(games); render(); },
+      clearStorage: ()=>{ localStorage.removeItem(STORAGE_KEY); games = defaultGames.slice(); render(); }
+    };
+  </script>
+</body>
+</html>
